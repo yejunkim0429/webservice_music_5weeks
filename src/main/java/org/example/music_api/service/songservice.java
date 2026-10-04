@@ -21,6 +21,8 @@ public class songservice {
     }
 
     public songresponse create(request data) {
+        validate(data);
+
         Song song = new Song(
                 null,
                 data.title(),
@@ -55,6 +57,7 @@ public class songservice {
 
     public songresponse update(Long id, request data) {
         Song song = findSong(id);
+        validate(data);
 
         song.setTitle(data.title());
         song.setArtist(data.artist());
@@ -95,5 +98,28 @@ public class songservice {
                 song.getGenre(),
                 song.getReleaseYear()
         );
+    }
+
+    private void validate(request data) {
+        if (data.title() == null || data.title().isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Name please: "
+            );
+        }
+
+        if (data.artist() == null || data.artist().isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Singer please: "
+            );
+        }
+
+        if (data.releaseYear() == null || data.releaseYear() <= 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "release year please: "
+            );
+        }
     }
 }
