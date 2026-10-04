@@ -7,6 +7,7 @@ import org.example.music_api.repository.songrepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,5 +122,18 @@ public class songservice {
                     "release year please: "
             );
         }
+    }
+    public List<songresponse> searchByTitle(String title) {
+        List<Song> songs = repository.findAll();
+        List<songresponse> responses = new ArrayList<>();
+
+        for (Song song : songs) {
+            if (song.getTitle().contains(title)) {
+                songresponse response = toResponse(song);
+                responses.add(response);
+            }
+        }
+
+        return responses;
     }
 }
